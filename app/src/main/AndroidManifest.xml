@@ -29,7 +29,7 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <data
                     android:host="map"
-                    android:scheme="yoka"/>
+                    android:scheme="@string/scheme"/>
             </intent-filter>
         </activity>
     </application>
