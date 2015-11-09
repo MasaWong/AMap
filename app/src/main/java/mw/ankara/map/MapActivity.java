@@ -54,7 +54,7 @@ import java.util.List;
  * @since 8/6/15
  */
 public class MapActivity extends AppCompatActivity implements AMapLocationListener,
-    GeocodeSearch.OnGeocodeSearchListener, AMap.OnMarkerClickListener, AMap.OnCameraChangeListener {
+    GeocodeSearch.OnGeocodeSearchListener, AMap.OnCameraChangeListener {
 
     private static final int DEFAULT_SCALE_LEVEL = 17;
 
@@ -95,6 +95,9 @@ public class MapActivity extends AppCompatActivity implements AMapLocationListen
         setupMapView(savedInstanceState);
     }
 
+    /**
+     * 设置查询的操作
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -106,6 +109,8 @@ public class MapActivity extends AppCompatActivity implements AMapLocationListen
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.confirm) {
             Intent intent = new Intent();
+            mCurrentLocation.address = mCenterMarker.getTitle();
+            mCurrentLocation.position = mCenterMarker.getPosition();
             mCurrentLocation.writeToIntent(intent);
 
             setResult(RESULT_OK, intent);
@@ -181,7 +186,6 @@ public class MapActivity extends AppCompatActivity implements AMapLocationListen
 
         // 初始化AMap对象
         mAMap = mMvMap.getMap();
-        mAMap.setOnMarkerClickListener(this);
         mAMap.setOnCameraChangeListener(this);
 
         // 设置默认定位按钮是否显示
@@ -194,15 +198,6 @@ public class MapActivity extends AppCompatActivity implements AMapLocationListen
         } else {
             moveCamera(false, CameraUpdateFactory.zoomTo(DEFAULT_SCALE_LEVEL));
         }
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        mCurrentLocation.address = marker.getTitle();
-        mCurrentLocation.position = marker.getPosition();
-
-        setTitle(marker.getTitle());
-        return false;
     }
 
     /**
@@ -288,8 +283,6 @@ public class MapActivity extends AppCompatActivity implements AMapLocationListen
             RegeocodeAddress address = regeocodeResult.getRegeocodeAddress();
             if (address != null) {
                 mCurrentLocation.city = address.getCity();
-                mCurrentLocation.address = address.getFormatAddress();
-                mCurrentLocation.position = mCenterMarker.getPosition();
 
                 mCenterMarker.setTitle(address.getFormatAddress());
                 mCenterMarker.setSnippet("坐标:" + mCenterMarker.getPosition().latitude
@@ -318,7 +311,7 @@ public class MapActivity extends AppCompatActivity implements AMapLocationListen
         mAMap.clear();
         mCenterMarker = mAMap.addMarker(new MarkerOptions()
             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-        mCenterMarker.setPositionByPixels(mMvMap.getWidth() / 2,  mMvMap.getHeight() / 2);
+        mCenterMarker.setPositionByPixels(mMvMap.getWidth() / 2, mMvMap.getHeight() / 2);
     }
 
     private void moveCamera(boolean animated, LatLng location) {

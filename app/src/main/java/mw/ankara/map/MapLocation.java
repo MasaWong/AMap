@@ -46,7 +46,7 @@ public class MapLocation {
     }
 
     public void recordLocation(AMapLocation aLocation) {
-        address = aLocation.getPoiName();
+        address = aLocation.getAddress();
         city = aLocation.getCity();
         position = new LatLng(aLocation.getLatitude(), aLocation.getLongitude());
         mLastLocatedTime = System.currentTimeMillis();
@@ -98,6 +98,6 @@ public class MapLocation {
         editor.putFloat(LATITUDE, (float) position.latitude);
         editor.putFloat(LONGITUDE, (float) position.longitude);
 
-        editor.apply();
+        editor.commit();
     }
 }
