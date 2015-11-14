@@ -1,12 +1,8 @@
 package mw.ankara.map;
 
 import android.content.Intent;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -19,13 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationListener;
-import com.amap.api.location.LocationManagerProxy;
-import com.amap.api.location.LocationProviderProxy;
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdate;
 import com.amap.api.maps2d.CameraUpdateFactory;
-import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.model.BitmapDescriptorFactory;
 import com.amap.api.maps2d.model.CameraPosition;
 import com.amap.api.maps2d.model.LatLng;
@@ -53,10 +45,8 @@ import java.util.List;
  * @author masawong
  * @since 8/6/15
  */
-public class MapActivity extends AppCompatActivity implements AMapLocationListener,
+public class MapActivity extends MapBaseActivity implements
     GeocodeSearch.OnGeocodeSearchListener, AMap.OnCameraChangeListener {
-
-    private static final int DEFAULT_SCALE_LEVEL = 17;
 
     /**
      * part of search view
@@ -67,32 +57,20 @@ public class MapActivity extends AppCompatActivity implements AMapLocationListen
 
     private ArrayAdapter<String> mPoiTipAdapter;
 
-    /**
-     * part of map
-     */
-    private MapView mMvMap;
-
-    private AMap mAMap;
-
-    private LocationManagerProxy mAMapLocationManager;
-
     private Marker mCenterMarker;
     private MapLocation mCurrentLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map);
-
-        Toolbar toolbar = (Toolbar) findViewById(R.id.map_tb_toolbar);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
 
         setupSearchView();
-        setupMapView(savedInstanceState);
+        moveCameraToCurrentLocation();
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_map;
     }
 
     /**
@@ -177,20 +155,14 @@ public class MapActivity extends AppCompatActivity implements AMapLocationListen
         });
     }
 
-    /**
-     * 设置地图的一些操作
-     */
-    private void setupMapView(Bundle savedInstanceState) {
-        mMvMap = (MapView) findViewById(R.id.map_mv_map);
-        mMvMap.onCreate(savedInstanceState);
+    @Override
+    protected void setupMapView(Bundle savedInstanceState) {
+        super.setupMapView(savedInstanceState);
 
-        // 初始化AMap对象
-        mAMap = mMvMap.getMap();
         mAMap.setOnCameraChangeListener(this);
+    }
 
-        // 设置默认定位按钮是否显示
-        mAMap.getUiSettings().setMyLocationButtonEnabled(false);
-
+    private void moveCameraToCurrentLocation() {
         // 显示上一次的位置，缩放到17级，缩放级别4~20
         mCurrentLocation = new MapLocation();
         if (mCurrentLocation.readFromPreference(this)) {
@@ -294,59 +266,21 @@ public class MapActivity extends AppCompatActivity implements AMapLocationListen
 
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
-
+        // Auto Generate
     }
 
     /**
      * 根据动画按钮状态，调用函数animateCamera或moveCamera来改变可视区域
      */
-    private void moveCamera(boolean animated, CameraUpdate update) {
-        if (animated) {
-            mAMap.animateCamera(update, 1000, null);
-        } else {
-            mAMap.moveCamera(update);
-        }
+    @Override
+    protected void moveCamera(boolean animated, CameraUpdate update) {
+        super.moveCamera(animated, update);
 
         // 添加中心位置标记
         mAMap.clear();
         mCenterMarker = mAMap.addMarker(new MarkerOptions()
             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         mCenterMarker.setPositionByPixels(mMvMap.getWidth() / 2, mMvMap.getHeight() / 2);
-    }
-
-    private void moveCamera(boolean animated, LatLng location) {
-        moveCamera(animated, CameraUpdateFactory.newCameraPosition(
-            new CameraPosition(location, DEFAULT_SCALE_LEVEL, 0, 0)));
-    }
-
-    private void moveCamera(boolean animated, MapLocation location) {
-        moveCamera(animated, CameraUpdateFactory.newCameraPosition(
-            new CameraPosition(location.position, DEFAULT_SCALE_LEVEL, 0, 0)));
-    }
-
-    /**
-     * 激活定位
-     */
-    public void activateLocating() {
-        if (mAMapLocationManager == null) {
-            mAMapLocationManager = LocationManagerProxy.getInstance(this);
-        }
-
-        // API定位采用GPS和网络混合定位方式
-        // 第一个参数是定位provider，第二个参数时间最短是2000毫秒，-1代表一次性定位
-        // 第三个参数距离间隔单位是米，第四个参数是定位监听者
-        mAMapLocationManager.requestLocationData(LocationProviderProxy.AMapNetwork, -1, 10, this);
-    }
-
-    /**
-     * 停止定位
-     */
-    public void deactivateLocating() {
-        if (mAMapLocationManager != null) {
-            mAMapLocationManager.removeUpdates(this);
-            mAMapLocationManager.destroy();
-        }
-        mAMapLocationManager = null;
     }
 
     /**
@@ -365,13 +299,9 @@ public class MapActivity extends AppCompatActivity implements AMapLocationListen
         deactivateLocating();
     }
 
-    /**
-     * 方法必须重写
-     */
     @Override
     protected void onResume() {
         super.onResume();
-        mMvMap.onResume();
 
         if (mCurrentLocation.needRelocate()) {
             activateLocating();
@@ -384,7 +314,6 @@ public class MapActivity extends AppCompatActivity implements AMapLocationListen
     @Override
     protected void onPause() {
         super.onPause();
-        mMvMap.onPause();
 
         deactivateLocating();
     }
@@ -395,18 +324,8 @@ public class MapActivity extends AppCompatActivity implements AMapLocationListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mMvMap.onDestroy();
 
         removeGeocodeSearch();
-    }
-
-    /**
-     * 方法必须重写
-     */
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mMvMap.onSaveInstanceState(outState);
     }
 
     /**
@@ -415,22 +334,5 @@ public class MapActivity extends AppCompatActivity implements AMapLocationListen
     private void hideSoftwareInput() {
         InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(mAcactvSearch.getWindowToken(), 0);
-    }
-
-    // useless
-    @Override
-    public void onLocationChanged(Location location) {
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
     }
 }

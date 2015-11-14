@@ -3,6 +3,7 @@ package mw.ankara.map;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps2d.model.LatLng;
@@ -40,6 +41,10 @@ public class MapLocation {
         readFromIntent(intent);
     }
 
+    public MapLocation(Uri uri) {
+        readFromUri(uri);
+    }
+
     public boolean needRelocate() {
         // 定位时间如果超过1分钟了，重新定位一下
         return System.currentTimeMillis() - mLastLocatedTime > 60000l;
@@ -58,6 +63,15 @@ public class MapLocation {
 
         double latitude = intent.getDoubleExtra(LATITUDE, 0d);
         double longitude = intent.getDoubleExtra(LONGITUDE, 0d);
+        position = new LatLng(latitude, longitude);
+    }
+
+    public void readFromUri(Uri uri) {
+        address = uri.getQueryParameter(ADDRESS);
+        city = uri.getQueryParameter(CITY);
+
+        double latitude = Double.parseDouble(uri.getQueryParameter(LATITUDE));
+        double longitude = Double.parseDouble(uri.getQueryParameter(LONGITUDE));
         position = new LatLng(latitude, longitude);
     }
 

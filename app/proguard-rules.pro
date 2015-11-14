@@ -15,3 +15,23 @@
 #-keepclassmembers class fqcn.of.javascript.interface.for.webview {
 #   public *;
 #}
+#如果有其它包有warning，在报出warning的包加入下面类似的-dontwarn 报名
+-dontwarn com.amap.api.**
+-dontwarn com.aps.**
+#高德相关混淆文件
+#3D 地图
+-keep class com.amap.api.maps.**{*;}
+-keep class com.autonavi.amap.mapcore.*{*;}
+#2D地图
+-keep class com.amap.api.maps2d.**{*;}
+-keep class com.amap.api.mapcore2d.**{*;}
+#Location
+-keep   class com.amap.api.location.**{*;}
+-keep   class com.aps.**{*;}
+#Service
+-keep class com.amap.api.services.**{*;}
+#导航
+-keep class com.amap.api.navi.**{*;}
+-keep class com.autonavi.**{*;}
+#讯飞语音
+-keep class com.iflytek.**{*;}
