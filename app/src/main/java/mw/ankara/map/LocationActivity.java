@@ -61,11 +61,6 @@ public class LocationActivity extends MapBaseActivity
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     /**
      * 设置查询的操作
      */
@@ -101,7 +96,7 @@ public class LocationActivity extends MapBaseActivity
         deactivateLocating();
         mProgressDialog.setMessage("正在规划路径");
 
-        mAMapNavi = AMapNavi.getInstance(this);
+        mAMapNavi = AMapNavi.getInstance(getApplicationContext());
         mAMapNavi.setAMapNaviListener(this);
         if (!mAMapNavi.calculateDriveRoute(mStarting, mDestination, null, AMapNavi.DrivingDefault)) {
             mProgressDialog.dismiss();
@@ -109,18 +104,13 @@ public class LocationActivity extends MapBaseActivity
         }
     }
 
-    private void releaseMapNavi() {
-        // 删除导航监听
-        if (mAMapNavi != null) {
-            mAMapNavi.removeAMapNaviListener(this);
-//            mAMapNavi.destroy();
-        }
-    }
-
     @Override
     public void onCalculateRouteSuccess() {
         mProgressDialog.dismiss();
-        releaseMapNavi();
+        // 删除导航监听
+        if (mAMapNavi != null) {
+            mAMapNavi.removeAMapNaviListener(this);
+        }
 
         startActivity(new Intent(this, NavigationActivity.class));
         finish();
@@ -129,20 +119,16 @@ public class LocationActivity extends MapBaseActivity
     @Override
     public void onCalculateRouteFailure(int i) {
         mProgressDialog.dismiss();
-        releaseMapNavi();
 
         Toast.makeText(this, "查询路径失败", Toast.LENGTH_SHORT).show();
     }
 
+    // useless
+
     @Override
     public void onInitNaviFailure() {
-        mProgressDialog.dismiss();
-        releaseMapNavi();
-
-        Toast.makeText(this, "导航初始化失败", Toast.LENGTH_SHORT).show();
     }
 
-    // useless
     @Override
     public void onInitNaviSuccess() {
     }
