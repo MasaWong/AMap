@@ -36,7 +36,9 @@ public class TTSController implements SynthesizerListener, AMapNaviListener {
     }
 
     public void init() {
-        SpeechUser.getUser().login(mContext, null, null, "appid=输入您讯飞的appid", listener);
+        SpeechUser.getUser().login(mContext, null, null,
+                mContext.getResources().getString(R.string.tts_appid),
+                listener);
         // 初始化合成对象.
         mSpeechSynthesizer = SpeechSynthesizer.createSynthesizer(mContext);
         initSpeechSynthesizer();

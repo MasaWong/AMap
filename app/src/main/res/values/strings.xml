@@ -2,6 +2,8 @@
     <string name="scheme">map</string>
     <string name="network_error">网络访问失败，请稍后重试</string>
 
+    <string name="tts_appid">appid=输入您讯飞的appid</string>
+
     <string name="navigation_title">正在导航</string>
 
     <string-array name="preference_values_tts_role">
