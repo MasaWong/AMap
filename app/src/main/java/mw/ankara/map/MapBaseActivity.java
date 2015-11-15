@@ -87,12 +87,12 @@ public class MapBaseActivity extends AppCompatActivity implements AMapLocationLi
 
     protected void moveCamera(boolean animated, LatLng location) {
         moveCamera(animated, CameraUpdateFactory.newCameraPosition(
-            new CameraPosition(location, DEFAULT_SCALE_LEVEL, 0, 0)));
+                new CameraPosition(location, DEFAULT_SCALE_LEVEL, 0, 0)));
     }
 
     protected void moveCamera(boolean animated, MapLocation location) {
         moveCamera(animated, CameraUpdateFactory.newCameraPosition(
-            new CameraPosition(location.position, DEFAULT_SCALE_LEVEL, 0, 0)));
+                new CameraPosition(location.position, DEFAULT_SCALE_LEVEL, 0, 0)));
     }
 
     /**

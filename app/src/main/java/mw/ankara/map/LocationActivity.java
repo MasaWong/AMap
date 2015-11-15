@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * @since 11/14/15
  */
 public class LocationActivity extends MapBaseActivity
-    implements AMapNaviListener, AMapNaviViewListener {
+        implements AMapNaviListener, AMapNaviViewListener {
 
     // 终点
     private ArrayList<NaviLatLng> mStarting = new ArrayList<>();
@@ -50,7 +50,7 @@ public class LocationActivity extends MapBaseActivity
 
             LatLng location = new LatLng(lat, lng);
             Marker marker = mAMap.addMarker(new MarkerOptions().position(location)
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 
             String title = uri.getQueryParameter("title");
             marker.setTitle(title);
@@ -64,12 +64,6 @@ public class LocationActivity extends MapBaseActivity
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        // 删除导航监听
-        if (mAMapNavi != null) {
-            mAMapNavi.removeAMapNaviListener(this);
-            mAMapNavi.destroy();
-        }
     }
 
     /**
@@ -78,13 +72,13 @@ public class LocationActivity extends MapBaseActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_confirm, menu);
+        getMenuInflater().inflate(R.menu.menu_navigate, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.confirm) {
+        if (item.getItemId() == R.id.navigate) {
             if (mProgressDialog == null) {
                 mProgressDialog = new ProgressDialog(this, 3);
                 mProgressDialog.setCancelable(true);
@@ -115,9 +109,18 @@ public class LocationActivity extends MapBaseActivity
         }
     }
 
+    private void releaseMapNavi() {
+        // 删除导航监听
+        if (mAMapNavi != null) {
+            mAMapNavi.removeAMapNaviListener(this);
+//            mAMapNavi.destroy();
+        }
+    }
+
     @Override
     public void onCalculateRouteSuccess() {
         mProgressDialog.dismiss();
+        releaseMapNavi();
 
         startActivity(new Intent(this, NavigationActivity.class));
         finish();
@@ -126,6 +129,7 @@ public class LocationActivity extends MapBaseActivity
     @Override
     public void onCalculateRouteFailure(int i) {
         mProgressDialog.dismiss();
+        releaseMapNavi();
 
         Toast.makeText(this, "查询路径失败", Toast.LENGTH_SHORT).show();
     }
@@ -133,6 +137,7 @@ public class LocationActivity extends MapBaseActivity
     @Override
     public void onInitNaviFailure() {
         mProgressDialog.dismiss();
+        releaseMapNavi();
 
         Toast.makeText(this, "导航初始化失败", Toast.LENGTH_SHORT).show();
     }

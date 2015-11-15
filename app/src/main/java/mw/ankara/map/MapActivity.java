@@ -46,7 +46,7 @@ import java.util.List;
  * @since 8/6/15
  */
 public class MapActivity extends MapBaseActivity implements
-    GeocodeSearch.OnGeocodeSearchListener, AMap.OnCameraChangeListener {
+        GeocodeSearch.OnGeocodeSearchListener, AMap.OnCameraChangeListener {
 
     /**
      * part of search view
@@ -198,7 +198,7 @@ public class MapActivity extends MapBaseActivity implements
                     }
                 } else {
                     Toast.makeText(MapActivity.this, R.string.network_error, Toast.LENGTH_SHORT)
-                        .show();
+                            .show();
                 }
             }
 
@@ -258,7 +258,7 @@ public class MapActivity extends MapBaseActivity implements
 
                 mCenterMarker.setTitle(address.getFormatAddress());
                 mCenterMarker.setSnippet("坐标:" + mCenterMarker.getPosition().latitude
-                    + "/" + mCenterMarker.getPosition().longitude);
+                        + "/" + mCenterMarker.getPosition().longitude);
                 mCenterMarker.showInfoWindow();
             }
         }
@@ -279,7 +279,7 @@ public class MapActivity extends MapBaseActivity implements
         // 添加中心位置标记
         mAMap.clear();
         mCenterMarker = mAMap.addMarker(new MarkerOptions()
-            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
         mCenterMarker.setPositionByPixels(mMvMap.getWidth() / 2, mMvMap.getHeight() / 2);
     }
 

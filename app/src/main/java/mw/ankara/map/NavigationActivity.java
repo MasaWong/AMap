@@ -1,7 +1,9 @@
 package mw.ankara.map;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -15,7 +17,7 @@ import com.amap.api.navi.AMapNaviViewListener;
  * @since 11/10/15
  */
 public class NavigationActivity extends AppCompatActivity implements
-    AMapNaviViewListener {
+        AMapNaviViewListener {
 
     //导航View
     private AMapNaviView mAMapNaviView;
@@ -61,17 +63,32 @@ public class NavigationActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * 导航界面返回按钮监听
-     */
-    @Override
-    public void onNaviCancel() {
-        onBackPressed();
-    }
+    private AlertDialog mAlertDialog;
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if (mAlertDialog == null) {
+            mAlertDialog = new AlertDialog
+                    .Builder(this, R.style.Base_Theme_AppCompat_Light_Dialog_Alert)
+                    .setMessage("是否退出导航")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            NavigationActivity.super.onBackPressed();
+                        }
+                    })
+                    .setNegativeButton("取消", null).create();
+        }
+        mAlertDialog.show();
+    }
+
+    /**
+     * 导航页面返回监听
+     */
+    @Override
+    public boolean onNaviBackClick() {
+        onBackPressed();
+        return true;
     }
 
     @Override
@@ -138,11 +155,10 @@ public class NavigationActivity extends AppCompatActivity implements
     }
 
     /**
-     * 导航页面返回监听
+     * 导航界面返回按钮监听
      */
     @Override
-    public boolean onNaviBackClick() {
+    public void onNaviCancel() {
         // TODO Auto-generated method stub
-        return false;
     }
 }
