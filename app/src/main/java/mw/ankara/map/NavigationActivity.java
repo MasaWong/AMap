@@ -40,6 +40,8 @@ public class NavigationActivity extends AppCompatActivity implements
 
         mTTSController = TTSController.getInstance(this);
         mTTSController.init();
+        //语音播报开始
+        mTTSController.startSpeaking();
 
         mAMapNavi = AMapNavi.getInstance(this);
         mAMapNavi.setAMapNaviListener(mTTSController);// 设置语音模块播报
@@ -48,8 +50,6 @@ public class NavigationActivity extends AppCompatActivity implements
         mAMapNaviView.onCreate(savedInstanceState);
         mAMapNaviView.setAMapNaviViewListener(this);
 
-        //语音播报开始
-        mTTSController.startSpeaking();
         // 开启实时导航
         mAMapNavi.startNavi(AMapNavi.GPSNaviMode);
     }
