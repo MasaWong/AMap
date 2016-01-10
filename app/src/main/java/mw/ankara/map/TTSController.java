@@ -37,8 +37,8 @@ public class TTSController implements SynthesizerListener, AMapNaviListener {
 
     public void init() {
         SpeechUser.getUser().login(mContext, null, null,
-                mContext.getResources().getString(R.string.tts_appid),
-                listener);
+            mContext.getResources().getString(R.string.tts_appid),
+            listener);
         // 初始化合成对象.
         mSpeechSynthesizer = SpeechSynthesizer.createSynthesizer(mContext);
         initSpeechSynthesizer();
@@ -75,16 +75,16 @@ public class TTSController implements SynthesizerListener, AMapNaviListener {
     private void initSpeechSynthesizer() {
         // 设置发音人
         mSpeechSynthesizer.setParameter(SpeechConstant.VOICE_NAME,
-                mContext.getString(R.string.preference_default_tts_role));
+            mContext.getString(R.string.preference_default_tts_role));
         // 设置语速
         mSpeechSynthesizer.setParameter(SpeechConstant.SPEED,
-                mContext.getString(R.string.preference_key_tts_speed));
+            mContext.getString(R.string.preference_key_tts_speed));
         // 设置音量
         mSpeechSynthesizer.setParameter(SpeechConstant.VOLUME,
-                mContext.getString(R.string.preference_key_tts_volume));
+            mContext.getString(R.string.preference_key_tts_volume));
         // 设置语调
         mSpeechSynthesizer.setParameter(SpeechConstant.PITCH,
-                mContext.getString(R.string.preference_key_tts_pitch));
+            mContext.getString(R.string.preference_key_tts_pitch));
 
     }
 

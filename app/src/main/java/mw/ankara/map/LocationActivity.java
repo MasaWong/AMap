@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * @since 11/14/15
  */
 public class LocationActivity extends MapBaseActivity
-        implements AMapNaviListener, AMapNaviViewListener {
+    implements AMapNaviListener, AMapNaviViewListener {
 
     // 终点
     private ArrayList<NaviLatLng> mStarting = new ArrayList<>();
@@ -50,7 +50,7 @@ public class LocationActivity extends MapBaseActivity
 
             LatLng location = new LatLng(lat, lng);
             Marker marker = mAMap.addMarker(new MarkerOptions().position(location)
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 
             String title = uri.getQueryParameter("title");
             marker.setTitle(title);

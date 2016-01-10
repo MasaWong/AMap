@@ -17,7 +17,7 @@ import com.amap.api.navi.AMapNaviViewListener;
  * @since 11/10/15
  */
 public class NavigationActivity extends AppCompatActivity implements
-        AMapNaviViewListener {
+    AMapNaviViewListener {
 
     //导航View
     private AMapNaviView mAMapNaviView;
@@ -69,15 +69,15 @@ public class NavigationActivity extends AppCompatActivity implements
     public void onBackPressed() {
         if (mAlertDialog == null) {
             mAlertDialog = new AlertDialog
-                    .Builder(this, R.style.Base_Theme_AppCompat_Light_Dialog_Alert)
-                    .setMessage("是否退出导航")
-                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            NavigationActivity.super.onBackPressed();
-                        }
-                    })
-                    .setNegativeButton("取消", null).create();
+                .Builder(this, R.style.Base_Theme_AppCompat_Light_Dialog_Alert)
+                .setMessage("是否退出导航")
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        NavigationActivity.super.onBackPressed();
+                    }
+                })
+                .setNegativeButton("取消", null).create();
         }
         mAlertDialog.show();
     }
