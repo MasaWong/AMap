@@ -44,6 +44,9 @@ public class LocationActivity extends MapBaseActivity
 
         Uri uri = getIntent().getData();
         if (uri != null) {
+            String title = uri.getQueryParameter("title");
+            setTitle(title);
+
             double lat = Double.parseDouble(uri.getQueryParameter("lat"));
             double lng = Double.parseDouble(uri.getQueryParameter("lng"));
             mDestination.add(new NaviLatLng(lat, lng));
@@ -52,8 +55,8 @@ public class LocationActivity extends MapBaseActivity
             Marker marker = mAMap.addMarker(new MarkerOptions().position(location)
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
 
-            String title = uri.getQueryParameter("title");
-            marker.setTitle(title);
+            String position = uri.getQueryParameter("position");
+            marker.setTitle(position);
             marker.setSnippet("坐标:" + lat + "/" + lng);
             marker.showInfoWindow();
 
